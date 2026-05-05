@@ -1,65 +1,110 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>生日快乐！</title>
+    <title>Phi 生日快樂 💜</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        body { margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; background: #ffafbd; background: linear-gradient(to bottom, #ffc3a0, #ffafbd); font-family: 'Helvetica Neue', sans-serif; overflow: hidden; }
-        .card { text-align: center; background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 80%; max-width: 400px; z-index: 10; }
-        h1 { color: #d4145a; margin-bottom: 10px; }
-        p { color: #555; line-height: 1.6; }
-        .btn { background: #d4145a; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-size: 1rem; cursor: pointer; transition: transform 0.2s; margin-top: 20px; }
-        .btn:active { transform: scale(0.9); }
+        /* Periwinkle Purple 背景色系 */
+        body { 
+            margin: 0; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #CCCCFF; /* Periwinkle 底色 */
+            background: linear-gradient(135deg, #CCCCFF 0%, #B2B2FF 100%); 
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
+            overflow: hidden; 
+        }
+        
+        .card { 
+            text-align: center; 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 2.5rem 2rem; 
+            border-radius: 30px; 
+            box-shadow: 0 15px 35px rgba(100, 100, 255, 0.2); 
+            width: 85%; 
+            max-width: 400px; 
+            z-index: 10; 
+            border: 2px solid #E6E6FF;
+        }
+
+        h1 { color: #6A5ACD; margin-bottom: 15px; font-size: 1.6rem; }
+        
+        /* 祝福語文字樣式 */
+        .blessing-text { 
+            color: #444; 
+            line-height: 1.8; 
+            font-size: 1.05rem; 
+            text-align: left; /* 讓長句子排列更整齊 */
+            margin: 20px 0;
+            white-space: pre-line; /* 保留換行 */
+        }
+
+        .btn { 
+            background: #7B68EE; 
+            color: white; 
+            border: none; 
+            padding: 14px 30px; 
+            border-radius: 50px; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(123, 104, 238, 0.4);
+        }
+
+        .btn:hover { background: #6A5ACD; transform: translateY(-2px); }
+        .btn:active { transform: scale(0.95); }
+
+        /* 隱藏區塊 */
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="card" id="mainCard">
-        <h1 id="title">🎂 嘿！</h1>
-        <p id="text">这里有一份给你的小惊喜，点开看看？</p>
-        <button class="btn" onclick="celebrate()">点开惊喜</button>
+        <h1 id="title">🎂 送給 Phi 的小驚喜</h1>
+        <div id="content">
+            <p style="color: #666;">嘿，點開看看這裡面藏了什麼？</p>
+            <button class="btn" onclick="celebrate()">點開驚喜</button>
+        </div>
     </div>
 
     <script>
         function celebrate() {
-            // 1. 喷洒纸屑
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
+            // 1. 噴灑紫色系紙屑
+            const count = 200;
+            const defaults = { origin: { y: 0.7 } };
 
-            // 2. 修改文字内容内容
-            document.getElementById('title').innerText = "🎉生日兴奋！🎉";
-            document.getElementById('text').innerText = "祝Phi新的一岁：\n眼里有光，手里有钱，\n心中有爱，万事顺遂！";
-            
-            // 3. 持续喷洒小效果
-            var duration = 3 * 1000;
-            var end = Date.now() + duration;
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio),
+                    colors: ['#CCCCFF', '#7B68EE', '#E6E6FF', '#9370DB'] // 紫色系纸屑
+                }));
+            }
 
-            (function frame() {
-                confetti({
-                    particleCount: 3,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: ['#ffafbd', '#ffc3a0']
-                });
-                confetti({
-                    particleCount: 3,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: ['#ffafbd', '#ffc3a0']
-                });
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
 
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
+            // 2. 切換成你的繁體祝福語
+            document.getElementById('title').innerHTML = "Phi~ 祝你生日快樂 💜";
+            document.getElementById('content').innerHTML = `
+                <div class="blessing-text">
+                    就算你沒有變得更厲害，<br>
+                    但你一直沒有放棄，這其實已經很了不起了。<br><br>
+                    有些成長不是別人看得到的那種，<br>
+                    而是你一次次選擇撐下來、走下去。<br><br>
+                    今年也不用急著變成誰，<br>
+                    你慢慢來，我會一直在旁邊看著你變好。
+                </div>
+                <button class="btn" onclick="location.reload()">再看一次</button>
+            `;
         }
     </script>
 </body>
