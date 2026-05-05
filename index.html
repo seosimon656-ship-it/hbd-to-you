@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐！</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body { margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; background: #ffafbd; background: linear-gradient(to bottom, #ffc3a0, #ffafbd); font-family: 'Helvetica Neue', sans-serif; overflow: hidden; }
+        .card { text-align: center; background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 80%; max-width: 400px; z-index: 10; }
+        h1 { color: #d4145a; margin-bottom: 10px; }
+        p { color: #555; line-height: 1.6; }
+        .btn { background: #d4145a; color: white; border: none; padding: 12px 25px; border-radius: 25px; font-size: 1rem; cursor: pointer; transition: transform 0.2s; margin-top: 20px; }
+        .btn:active { transform: scale(0.9); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="mainCard">
+        <h1 id="title">🎂 嘿！</h1>
+        <p id="text">这里有一份给你的小惊喜，点开看看？</p>
+        <button class="btn" onclick="celebrate()">点开惊喜</button>
+    </div>
+
+    <script>
+        function celebrate() {
+            // 1. 喷洒纸屑
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // 2. 修改文字内容内容
+            document.getElementById('title').innerText = "🎉生日兴奋！🎉";
+            document.getElementById('text').innerText = "祝Phi新的一岁：\n眼里有光，手里有钱，\n心中有爱，万事顺遂！";
+            
+            // 3. 持续喷洒小效果
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ffafbd', '#ffc3a0']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ffafbd', '#ffc3a0']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
+</body>
+</html>
