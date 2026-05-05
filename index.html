@@ -2,7 +2,7 @@
 <html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Phi 生日興奮 💜</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
@@ -16,66 +16,84 @@
             background: #CCCCFF; 
             background: linear-gradient(135deg, #CCCCFF 0%, #B2B2FF 100%); 
             font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
-            overflow: hidden; 
+            overflow: hidden; /* 防止身體滾動 */
         }
         
-        /* 增加卡片呼吸感動畫 */
         @keyframes cardFloat {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); } /* 減小浮動幅度 */
             100% { transform: translateY(0px); }
         }
 
         .card { 
             text-align: center; 
             background: rgba(255, 255, 255, 0.95); 
-            padding: 2rem; 
+            padding: 1.5rem; /* 減小內邊距以節省空間 */
             border-radius: 30px; 
             box-shadow: 0 15px 35px rgba(100, 100, 255, 0.2); 
             width: 85%; 
-            max-width: 400px; 
+            max-width: 380px; /* 稍微縮小最大寬度 */
             z-index: 10; 
             border: 2px solid #E6E6FF;
-            animation: cardFloat 4s ease-in-out infinite; /* 呼吸效果 */
+            animation: cardFloat 4s ease-in-out infinite;
+            
+            /* UI/UX 修復：限制卡片高度並允許內容滾動 */
+            max-height: 85vh; 
+            overflow-y: auto; /* 如果內容太多，卡片內部滾動 */
+            -webkit-overflow-scrolling: touch; /* 手機滾動流暢 */
+            
+            /* 讓卡片內部元素垂直排列 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        h1 { color: #6A5ACD; margin-bottom: 15px; font-size: 1.6rem; }
+        /* 修復：優化滾動條樣式，使其更隱蔽 */
+        .card::-webkit-scrollbar { width: 5px; }
+        .card::-webkit-scrollbar-thumb { background: #E6E6FF; border-radius: 10px; }
+
+        h1 { color: #6A5ACD; margin-bottom: 10px; font-size: 1.5rem; margin-top: 0; }
         
-        /* 祝福語文字樣式 + 淡入動畫 */
         .blessing-text { 
             color: #444; 
-            line-height: 1.8; 
-            font-size: 1.05rem; 
+            line-height: 1.7; /* 稍微減小行高 */
+            font-size: 1rem; /* 稍微減小字體 */
             text-align: left; 
-            margin: 20px 0;
+            margin: 15px 0; /* 減小邊距 */
             white-space: pre-line;
-            animation: fadeIn 2s ease-in;
+            animation: fadeIn 1.5s ease-in;
+            width: 100%; /* 確保文字佔滿寬度 */
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* UI/UX 修復：優化圖片顯示 */
         .lingorm-img {
-            width: 100%;
-            border-radius: 15px;
-            margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            animation: fadeIn 3s ease-in;
+            max-width: 80%; /* 限制圖片寬度，不要太大 */
+            height: auto; /* 保持比例 */
+            border-radius: 12px;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            animation: fadeIn 2.5s ease-in;
+            object-fit: contain; /* 確保圖片不被裁剪 */
         }
 
         .btn { 
             background: #7B68EE; 
             color: white; 
             border: none; 
-            padding: 14px 30px; 
+            padding: 12px 28px; 
             border-radius: 50px; 
-            font-size: 1.1rem; 
+            font-size: 1rem; 
             cursor: pointer; 
             transition: all 0.3s ease; 
-            margin-top: 10px;
+            margin-top: 20px; /* 增加頂部邊距 */
+            margin-bottom: 5px; /* 增加底部邊距 */
             box-shadow: 0 5px 15px rgba(123, 104, 238, 0.4);
+            flex-shrink: 0; /* 確保按鈕不會被壓縮 */
         }
 
         .btn:hover { background: #6A5ACD; transform: translateY(-2px); }
@@ -86,8 +104,8 @@
 
     <div class="card" id="mainCard">
         <h1 id="title">🎂 送給 Phi 的小驚喜</h1>
-        <div id="content">
-            <p style="color: #666;">嘿，點開看看這裡面藏了什麼？</p>
+        <div id="content" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <p style="color: #666; margin: 10px 0;">嘿，點開看看這裡面藏了什麼？</p>
             <button class="btn" onclick="celebrate()">點開驚喜</button>
         </div>
     </div>
@@ -95,8 +113,8 @@
     <script>
         function celebrate() {
             // 1. 噴灑紫色系紙屑
-            const count = 200;
-            const defaults = { origin: { y: 0.7 } };
+            const count = 150; // 稍微減少紙屑數量以提高性能
+            const defaults = { origin: { y: 0.8 } };
 
             function fire(particleRatio, opts) {
                 confetti(Object.assign({}, defaults, opts, {
@@ -105,11 +123,11 @@
                 }));
             }
 
-            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.25, { spread: 26, startVelocity: 50 });
             fire(0.2, { spread: 60 });
             fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
+            fire(0.1, { spread: 120, startVelocity: 20, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 40 });
 
             // 2. 切換成你的繁體祝福語 + LingOrm 圖片
             document.getElementById('title').innerHTML = "Phi~ 祝你生日興奮！ 💜";
@@ -123,8 +141,7 @@
                     你慢慢來，我會一直在旁邊看著你變好。
                 </div>
                 <img src="lingorm.png" alt="LingOrm" class="lingorm-img">
-                <br>
-                <button class="btn" style="margin-top:20px;" onclick="location.reload()">再看一次</button>
+                <button class="btn" onclick="location.reload()">再看一次</button>
             `;
         }
     </script>
