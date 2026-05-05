@@ -13,34 +13,56 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            background: #CCCCFF; /* Periwinkle 底色 */
+            background: #CCCCFF; 
             background: linear-gradient(135deg, #CCCCFF 0%, #B2B2FF 100%); 
             font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; 
             overflow: hidden; 
         }
         
+        /* 增加卡片呼吸感動畫 */
+        @keyframes cardFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
         .card { 
             text-align: center; 
-            background: rgba(255, 255, 255, 0.9); 
-            padding: 2.5rem 2rem; 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 2rem; 
             border-radius: 30px; 
             box-shadow: 0 15px 35px rgba(100, 100, 255, 0.2); 
             width: 85%; 
             max-width: 400px; 
             z-index: 10; 
             border: 2px solid #E6E6FF;
+            animation: cardFloat 4s ease-in-out infinite; /* 呼吸效果 */
         }
 
         h1 { color: #6A5ACD; margin-bottom: 15px; font-size: 1.6rem; }
         
-        /* 祝福語文字樣式 */
+        /* 祝福語文字樣式 + 淡入動畫 */
         .blessing-text { 
             color: #444; 
             line-height: 1.8; 
             font-size: 1.05rem; 
-            text-align: left; /* 讓長句子排列更整齊 */
+            text-align: left; 
             margin: 20px 0;
-            white-space: pre-line; /* 保留換行 */
+            white-space: pre-line;
+            animation: fadeIn 2s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lingorm-img {
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 3s ease-in;
         }
 
         .btn { 
@@ -58,9 +80,6 @@
 
         .btn:hover { background: #6A5ACD; transform: translateY(-2px); }
         .btn:active { transform: scale(0.95); }
-
-        /* 隱藏區塊 */
-        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -82,7 +101,7 @@
             function fire(particleRatio, opts) {
                 confetti(Object.assign({}, defaults, opts, {
                     particleCount: Math.floor(count * particleRatio),
-                    colors: ['#CCCCFF', '#7B68EE', '#E6E6FF', '#9370DB'] // 紫色系纸屑
+                    colors: ['#CCCCFF', '#7B68EE', '#E6E6FF', '#9370DB']
                 }));
             }
 
@@ -92,7 +111,7 @@
             fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
             fire(0.1, { spread: 120, startVelocity: 45 });
 
-            // 2. 切換成你的繁體祝福語
+            // 2. 切換成你的繁體祝福語 + LingOrm 圖片
             document.getElementById('title').innerHTML = "Phi~ 祝你生日興奮！ 💜";
             document.getElementById('content').innerHTML = `
                 <div class="blessing-text">
@@ -103,7 +122,9 @@
                     今年也不用急著變成誰，<br>
                     你慢慢來，我會一直在旁邊看著你變好。
                 </div>
-                <button class="btn" onclick="location.reload()">再看一次</button>
+                <img src="lingorm.png" alt="LingOrm" class="lingorm-img">
+                <br>
+                <button class="btn" style="margin-top:20px;" onclick="location.reload()">再看一次</button>
             `;
         }
     </script>
